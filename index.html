@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment & Startup Frameworks</title>
+    <title>Investment Frameworks</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
@@ -47,12 +47,12 @@
         /* ── Pinned Quote Banner ── */
         .quote-banner {
             position: sticky;
-            top: 0;
-            z-index: 200;
+            top: 0; /* updated dynamically by JS */
+            z-index: 150;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
+            transition: max-height 0.3s ease, padding 0.3s ease, top 0.3s ease;
             max-height: 200px;
         }
 
@@ -63,7 +63,7 @@
         }
 
         .quote-inner {
-            max-width: 780px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 16px 24px;
             display: flex;
@@ -120,16 +120,15 @@
         header {
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 200;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             padding: 12px 24px;
             box-shadow: var(--shadow-sm);
-            transition: top 0.3s ease;
         }
 
         .header-inner {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -219,13 +218,13 @@
         /* ── Layout ── */
         .layout {
             display: flex;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         nav {
-            width: 260px;
-            min-width: 260px;
+            width: 300px;
+            min-width: 300px;
             padding: 20px 0;
             overflow-y: auto;
             height: calc(100vh - 56px);
@@ -270,7 +269,7 @@
             flex: 1;
             min-width: 0;
             padding: 32px 48px 80px;
-            max-width: 760px;
+            max-width: 860px;
         }
 
         /* ── Framework Cards ── */
@@ -503,7 +502,7 @@
 
         /* ── Mobile ── */
         @media (max-width: 1024px) {
-            nav { width: 220px; min-width: 220px; }
+            nav { width: 260px; min-width: 260px; }
             main { padding: 24px 32px 64px; }
         }
 
@@ -580,7 +579,24 @@
 </head>
 <body>
 
-<!-- Pinned Quote Banner -->
+<!-- Header -->
+<header id="stickyHeader">
+    <div class="header-inner">
+        <h1>Investment Frameworks <span class="framework-count" id="frameworkCount"></span></h1>
+        <div class="search-container">
+            <span class="search-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+            <input type="text" id="search" placeholder="Search frameworks, metrics, questions..." autocomplete="off" spellcheck="false">
+            <div class="search-meta">
+                <span class="search-count" id="searchCount"></span>
+                <span class="kbd-hint"><kbd>/</kbd></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Quote Banner (below header) -->
 <div class="quote-banner" id="quoteBanner">
     <div class="quote-inner">
         <blockquote>
@@ -596,26 +612,9 @@
     </div>
 </div>
 
-<!-- Header -->
-<header id="stickyHeader">
-    <div class="header-inner">
-        <h1>Frameworks <span class="framework-count" id="frameworkCount"></span></h1>
-        <div class="search-container">
-            <span class="search-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </span>
-            <input type="text" id="search" placeholder="Search frameworks, metrics, questions..." autocomplete="off" spellcheck="false">
-            <div class="search-meta">
-                <span class="search-count" id="searchCount"></span>
-                <span class="kbd-hint"><kbd>/</kbd></span>
-            </div>
-        </div>
-    </div>
-</header>
-
 <div class="layout">
     <nav id="sidebar">
-        <div class="nav-label">Frameworks</div>
+        <div class="nav-label">Investment Frameworks</div>
     </nav>
     <main id="content"></main>
 </div>
@@ -1862,9 +1861,11 @@ function initStickyPositioning() {
     const nav = document.getElementById('sidebar');
 
     function update() {
+        const headerH = header.offsetHeight;
+        // Quote banner sticks right below the header
+        banner.style.top = headerH + 'px';
         const bannerH = banner.classList.contains('collapsed') ? 0 : banner.offsetHeight;
-        header.style.top = bannerH + 'px';
-        const totalTop = bannerH + header.offsetHeight;
+        const totalTop = headerH + bannerH;
         nav.style.top = totalTop + 'px';
         nav.style.height = `calc(100vh - ${totalTop}px)`;
         document.querySelectorAll('.framework').forEach(fw => {
