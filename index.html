@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment & Startup Frameworks</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --green: #3fb950;
+            --search-bg: #0d1117;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        #search {
+            width: 100%;
+            padding: 8px 12px 8px 36px;
+            background: var(--search-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+        }
+
+        #search:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .search-count {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 90px);
+        }
+
+        nav {
+            width: 280px;
+            min-width: 280px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 16px 0;
+            overflow-y: auto;
+            height: calc(100vh - 90px);
+            position: sticky;
+            top: 90px;
+        }
+
+        nav a {
+            display: block;
+            padding: 6px 20px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            border-left: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        nav a:hover {
+            color: var(--text);
+            background: rgba(88, 166, 255, 0.05);
+        }
+
+        nav a.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(88, 166, 255, 0.08);
+        }
+
+        main {
+            flex: 1;
+            padding: 32px 48px;
+            max-width: 900px;
+        }
+
+        .inspiration {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .inspiration blockquote {
+            border-left: 3px solid var(--accent);
+            padding-left: 16px;
+            margin: 12px 0;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .inspiration blockquote strong {
+            color: var(--text);
+        }
+
+        .inspiration .attribution {
+            color: var(--accent);
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        .framework {
+            margin-bottom: 48px;
+            scroll-margin-top: 100px;
+        }
+
+        .framework-header {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .framework-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .framework-header h2 a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .framework-header h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .framework-header .source {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .framework-header .source a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .framework-header .source a:hover {
+            color: var(--accent);
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 4px 0 4px 20px;
+            position: relative;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .checklist li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 11px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .checklist .category-label {
+            font-weight: 600;
+            color: var(--accent);
+            margin-top: 12px;
+        }
+
+        .checklist .category-label::before {
+            display: none;
+        }
+
+        .checklist .sub-item {
+            padding-left: 40px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .checklist .sub-item::before {
+            left: 20px;
+            width: 4px;
+            height: 4px;
+            background: var(--border);
+        }
+
+        .checklist .sub-sub-item {
+            padding-left: 60px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .checklist .sub-sub-item::before {
+            left: 40px;
+            width: 4px;
+            height: 4px;
+            background: var(--border);
+        }
+
+        .section-heading {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--green);
+            margin: 16px 0 8px 0;
+            padding: 4px 0;
+        }
+
+        .subsection-heading {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 12px 0 6px 20px;
+        }
+
+        mark {
+            background: rgba(88, 166, 255, 0.25);
+            color: var(--text);
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .other-collections {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .other-collections h2 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .other-collections a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .other-collections a:hover {
+            text-decoration: underline;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.15s;
+        }
+
+        .back-to-top:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .back-to-top.visible {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            nav { display: none; }
+            main { padding: 20px 16px; }
+            .layout { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Investment & Startup Frameworks</h1>
+    <div class="search-container">
+        <span class="search-icon">&#128269;</span>
+        <input type="text" id="search" placeholder="Search frameworks, metrics, questions..." autocomplete="off">
+        <span class="search-count" id="searchCount"></span>
+    </div>
+</header>
+
+<div class="layout">
+    <nav id="sidebar"></nav>
+    <main id="content"></main>
+</div>
+
+<button class="back-to-top" id="backToTop" title="Back to top">&#8593;</button>
+
+<script>
+const DATA = {
+    inspiration: [
+        {
+            quote: "How can smart people so often be wrong? They don't do what I'm telling you to do: <strong>use a checklist to be sure you get all the main models and use them together in a multimodular way</strong>.",
+            author: "Charlie Munger"
+        },
+        {
+            quote: "<strong>If one could open the lid, so to speak, and see what was in the head of the experienced decision maker, one would find that he had at his disposal repertoires of possible actions; that he had checklists of things to think about before he acted.</strong>",
+            author: "Herbert Simon, American economist"
+        }
+    ],
+    frameworks: [
+        {
+            id: "a16z-16-metrics",
+            name: "a16z's \"16 Startup Metrics\"",
+            url: "https://a16z.com/16-metrics/",
+            items: [
+                "Bookings vs. Revenue",
+                "Recurring Revenue vs. Total Revenue",
+                "Gross Profit",
+                "Total Contract Value (TCV) vs. Annual Contract Value (ACV)",
+                "Life Time Value (LTV)",
+                "Gross Merchandise Volume (GMV) vs. Revenue",
+                "Unearned or Deferred Revenue vs. Billings",
+                "Customer Acquisition Cost (CAC): Blended vs. Paid, Organic vs. Inorganic",
+                "Active Users (DAU, WAU, MAU)",
+                "Month-on-Month Growth",
+                "Churn",
+                "Burn Rate",
+                "Downloads",
+                "Cumulative Charts vs. Growth Metrics",
+                "Chart Tricks",
+                "Order of Operations"
+            ]
+        },
+        {
+            id: "a16z-16-more-metrics",
+            name: "a16z's \"16 More Startup Metrics\"",
+            url: "https://a16z.com/16-more-metrics/",
+            items: [
+                "Total Addressable Market (TAM)",
+                "ARR vs. Annual Run Rate",
+                "Average Revenue Per User (ARPU)",
+                "Gross Margins",
+                "Sell-Through Rates & Inventory Turns",
+                "Network Effects",
+                "Virality",
+                "Economies of Scale",
+                "Net Promoter Score",
+                "Cohort Analysis",
+                "Registered Users",
+                "Active Users (across social, media, e-commerce)",
+                "Sources of Traffic",
+                "Customer Concentration",
+                "Truncating the Y-Axis",
+                "Cumulative Charts, Again"
+            ]
+        },
+        {
+            id: "a16z-passion-economy",
+            name: "a16z's \"16 Key Metrics for the Passion Economy\"",
+            url: "https://a16z.com/16-key-metrics-for-the-passion-economy/",
+            items: [
+                "Conversion of free fans to supporters and subscribers",
+                "Total creators with sales (cumulative and in a given time frame)",
+                "Creators who have reached a certain revenue threshold",
+                "Gross Transaction Value or Gross Subscription Value",
+                "Monthly Recurring Revenue (MRR) and Annual Recurring Revenue (ARR)",
+                "Average selling price (ASP)",
+                "Share and sources of earnings",
+                "Revenue retention (creators & audience)",
+                "Fan engagement rate",
+                "Loyalty and retention of fans",
+                "Creator retention and churn",
+                "The Flywheel: Percentage of fans that become creators, creators bringing new creators, fans bringing new fans",
+                "Creator affinity and value",
+                "Acquisition costs and channels for creators and users",
+                "Intra-audience interactions",
+                "Network effects"
+            ]
+        },
+        {
+            id: "aaron-neil",
+            name: "Aaron Neil's \"How To Think\" Framework",
+            url: "https://twitter.com/aneilvc",
+            sections: [
+                {
+                    heading: "How to Think About a Company",
+                    items: [
+                        "Who is target customer (big corps, mom & pops)?",
+                        "What exactly they are disrupting: what the traditional business model is and how this company is changing that? How are they disrupting? Are they working directly against the legacy players or working with the legacy players to complement them?",
+                        "Are they improving efficiency in the industry \u2013 how?",
+                        "Pricing?",
+                        "Logistics on exactly how the business works: profit, major costs, KPIs",
+                        "What is the customer experience: what does the business look like from the customer's POV from initial contact to first sale to retention?",
+                        "Customer retention?",
+                        "Business model in terms of revenue: SaaS, take rate, advertising, etc.?",
+                        "Founder, current CEO (if not founder), key management credentials/performance at past companies",
+                        "Is the company delivering on previous projections? Do future projections make sense?",
+                        "Is this a sustainable business (i.e., can they survive without VC money)?",
+                        "Is this business integral to the customer?",
+                        "What is their value-add?",
+                        "How reliable/predictable is their revenue?",
+                        "Spend time using the product: how do you like it?",
+                        "How can this business scale?",
+                        "Look at ancillary revenue streams: should the business spend more/less time here?",
+                        "Geographical coverage?",
+                        "Vertical vs. horizontal expansion opportunities?",
+                        "Is this business a means to a larger business (e.g., Netflix renting DVDs to get into streaming space)?",
+                        "What is the company doing with new investor capital?",
+                        "Dissect the company's costs. What exactly is baked into each cost line and how are those going to change as the company grows?",
+                        "What are the primary geographies the company operates in? How penetrated are these? What other geographical markets can the company penetrate?"
+                    ]
+                },
+                {
+                    heading: "How to Think About an Industry",
+                    items: [
+                        "Competitors?",
+                        "Find metrics companies in the industry are evaluated on. How does this company compare?",
+                        "Traditional business model?",
+                        "Does our company have a competitive advantage?",
+                        "Macro/non-fundamental events headwinds and/or tailwinds",
+                        "Industry growth stage: any proven winners, consolidation, etc.?",
+                        "Addressable market CAGR?",
+                        "Barriers to entry/exit?",
+                        "Is this a winner take all market? Will this company be the winner and therefore a monopoly?"
+                    ]
+                },
+                {
+                    heading: "How to Think About Valuation",
+                    items: [
+                        "What are the possible outcomes? Bear? Base? Bull?",
+                        "Potential exit opportunities/when? (IPO, strategic private, PE shop, etc.)",
+                        "What are the three main drivers of the financial statements? Focus on those."
+                    ]
+                }
+            ]
+        },
+        {
+            id: "baillie-gifford",
+            name: "Baillie Gifford's 10 Question Stock Research Framework",
+            url: "https://twitter.com/LennyIce/status/1311818979925729280",
+            sourceUrl: "https://www.bailliegifford.com/", // Original document link redirects to homepage
+            sections: [
+                {
+                    heading: "Industry Background",
+                    items: [
+                        "Is there room to at least double sales over the next 5 years?",
+                        "What happens over ten years and beyond?"
+                    ]
+                },
+                {
+                    heading: "Competitive Advantage",
+                    items: [
+                        "What is your competitive advantage?",
+                        "Is your business culture clearly differentiated? Is it adaptable?",
+                        "Why do your customers like you? How do you contribute to society?"
+                    ]
+                },
+                {
+                    heading: "Financial Strength",
+                    items: [
+                        "Are your returns worthwhile?",
+                        "Will they rise or fall?"
+                    ]
+                },
+                {
+                    heading: "Management Attitudes",
+                    items: ["How do you deploy capital?"]
+                },
+                {
+                    heading: "Valuation",
+                    items: [
+                        "How could it be worth five times as much, or more?",
+                        "Why doesn't the market realize this?"
+                    ]
+                }
+            ]
+        },
+        {
+            id: "bijan-sabet",
+            name: "Bijan Sabet's Checklist",
+            url: "https://twitter.com/daveambrose/status/501936379371454464",
+            items: [
+                "Are the founder's extraordinary?",
+                "Do I love the product?",
+                "Is the vision compelling?",
+                "If I wasn't a VC, would I want to work for the founders at the startup?"
+            ]
+        },
+        {
+            id: "bill-ackman",
+            name: "Bill Ackman & Pershing Square Principles",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            sourceUrl: "https://acquirersmultiple.com/2020/06/bill-ackman-engrave-your-investment-principles-in-stone-and-stick-to-them/",
+            items: [
+                "Simple",
+                "Predictable",
+                "Free cash flow generative",
+                "Strong profit-growth potential",
+                "Scarcity value",
+                "Dominant player",
+                "Competitive moat",
+                "Large barriers to entry",
+                "Earning high returns on capital",
+                "Limited exposure to extrinsic risks",
+                "Strong balance sheet",
+                "No need for capital to survive",
+                "Excellent management",
+                "Good governance"
+            ]
+        },
+        {
+            id: "bill-gurley",
+            name: "Bill Gurley: Effectiveness of an Online Marketplace",
+            url: "https://abovethecrowd.com/2012/11/13/our-most-recent-marketplace-investment-dogvacay-from-los-angeles/",
+            items: [
+                "New Experience vs. The Status Quo",
+                "Economic Advantage vs. The Status Quo",
+                "Opportunity for Technology to Add Value",
+                "Fragmentation of Suppliers",
+                "Friction of Supplier Sign-Up",
+                "Size of Market Opportunity",
+                "Expand the Market",
+                "Frequency",
+                "Payment Flow",
+                "Network Effects"
+            ]
+        },
+        {
+            id: "brian-feroldi",
+            name: "Brian Feroldi's Investment Checklist & Gauntlet",
+            url: null, // Original Motley Fool boards link is dead (boards shut down)
+            sections: [
+                {
+                    heading: "Checklist",
+                    subsections: [
+                        {
+                            subheading: "Financials",
+                            items: [
+                                "Financial Resilience: Strong balance sheet that could survive and thrive in an industry downturn. Score 0-5.",
+                                "Gross Margin: High gross margin signifies tremendous value creation. Below 50% = 0, 50-80% = 1-2, Above 80% = 3. Max 3.",
+                                "Return on Equity: ROE below 10% = 0, 10-20% = 1-2, Above 20% = 3. Max 3.",
+                                "Free Cash Flow: Negative FCF = 0. Positive but stable = 1-2. Positive and growing rapidly = 3. Max 3.",
+                                "Earnings Per Share: Negative EPS = 0. Positive but stable = 1-2. Positive and growing >15% = 3. Max 3."
+                            ]
+                        },
+                        {
+                            subheading: "Moat",
+                            items: [
+                                "Network Effect: True network effect (like Facebook). Score 0-15.",
+                                "Switching Costs: Pain of switching in time, cost, money, or training. Score 0-15.",
+                                "Durable Cost Advantage: Extreme scale, physical location, vertical integration, effective distribution. Score 0-15.",
+                                "Intangibles: Premium brand, long-lived patent, government license. Max 15.",
+                                "Moat Direction: Evidence that moat is widening or stable. Weakening = 0, Stable = 2-3, Widening = 5."
+                            ]
+                        },
+                        {
+                            subheading: "Potential",
+                            items: [
+                                "Optionality: Multiple futures, expand to new markets. None = 0, Some within industry = 3-5, New unrelated business = 7. Max 7.",
+                                "Organic Growth Runway: Room for organic growth expansion. Owns market = 0, 2-3x GDP = 2-4, 15%+ growth potential = 4. Max 4.",
+                                "Top Dog and First Mover: In important, emerging industry and/or industry disruptor. Max 3.",
+                                "Operating Leverage: Scaling business. Net loss = 0, Showing signs = 1, Expanding margins = 4. Max 4."
+                            ]
+                        },
+                        {
+                            subheading: "Customers",
+                            items: [
+                                "Acquisition: Customers gained easily without big marketing spend. Word of mouth is key. Max 5.",
+                                "Dependence: Products/services in demand in good times and bad. Recession-proof = 5. Max 5."
+                            ]
+                        },
+                        {
+                            subheading: "Company-Specific Factors",
+                            items: [
+                                "Recurring Revenue: Razor/blade, consumables, transactional, subscription. None = 0, Mostly recurring = 5. Max 5.",
+                                "Pricing Power: Ability to raise prices at will. None = 0, GDP = 3, Lots = 5. Max 5."
+                            ]
+                        },
+                        {
+                            subheading: "Management & Culture",
+                            items: [
+                                "Soul in the Game: Cares about long-term health. Founders/family get max credit. New hired gun CEO = 0. Max 4.",
+                                "Insider Ownership: Significant net worth tied to business. Max 3.",
+                                "Glassdoor Ratings: Overall >4, CEO approval >80%, recommend to friend >80%. Max 4.",
+                                "Mission Statement: Purpose beyond money. Simple, inspirational, clear. 'Shareholder value' priority = 0. Max 3."
+                            ]
+                        },
+                        {
+                            subheading: "Stock",
+                            items: [
+                                "Performance: Winners keep winning. Beaten market over 5 years. Outperformance by 100% = full credit. Max 4.",
+                                "Shareholder Friendly Actions: Rising dividend, stock buybacks, or debt paydown. Max 3.",
+                                "Consistently Beats Expectations: Last 4 quarters, 1 point per big beat, 0.5 per small beat. Max 4."
+                            ]
+                        }
+                    ]
+                },
+                {
+                    heading: "The Gauntlet",
+                    items: [
+                        "Customer Concentration: Single company >20% of sales = -5. Some >10% = -2 to -4. None = 0.",
+                        "Industry Being Disrupted: Major disruption = -5. Some risk = -3. None = 0.",
+                        "Outside Factors: Depends on commodity prices, interest rates, government spending = -3 to -5. Otherwise 0.",
+                        "Big Market Loser: Lost to market by >100% over 5 years = -5. 50% loss = -3.",
+                        "Growth by Acquisition: Only through acquisition = -4. Regular acquisitions with organic growth = -2. Otherwise 0.",
+                        "Binary Event: Big legal ruling/government decision could ruin thesis = -5.",
+                        "Extreme Dilution: Share count rising >5% annually from SBC = -4. 3-5% = -2. <3% = 0.",
+                        "Complicated Financial Statements: Overly complicated = -3. Otherwise 0.",
+                        "Antitrust Concerns: Dominant enough for regulator crosshairs = -3.",
+                        "Headquarters: Developing country = -3. Israel = -2. Non-US developed = -1. US = 0.",
+                        "Currency Risk: >66% sales outside US = -2. >33% = -1. Otherwise 0."
+                    ]
+                }
+            ]
+        },
+        {
+            id: "bruce-berkowitz",
+            name: "Bruce Berkowitz's Basic Checklist for Investing",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "Can you kill the investment? Is there adult supervision at the company?",
+                "Is the company essential? Does it depend upon the kindness of strangers?",
+                "What can the company make? Reasonable profitability for owners?",
+                "How are owners paid? Distributions?",
+                "Management - honest in past and present?",
+                "Does accounting reflect reality?",
+                "Does the balance sheet match up with the income statement?",
+                "Catalysts - Buybacks? Misunderstood? Is enterprise having a big problem that is fixable? Everyone's been burned by the stock so afraid to buy it.",
+                "Are there irrational fears of current headwinds?",
+                "Does the business have pricing power or unit growth?",
+                "Can you hold the investment for a long time & does it improve portfolio performance?"
+            ]
+        },
+        {
+            id: "charlie-munger",
+            name: "Charlie Munger's Checklist",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "Can you understand the business? Is it in your circle of competence?",
+                "Does the business have a moat? Does it have a durable competitive advantage?",
+                "Does it have managers who behave as owners and are wise capital allocators?",
+                "Do insiders own their own stock and are they buying back shares?",
+                "Does the company have a lot of debt? Any long list of numbers multiplied by zero is always zero"
+            ],
+            subitems: {
+                0: ["Avoid industries where you know little (e.g. technology, biotech)"],
+                1: ["Avoid perfectly competitive and high fixed cost industries"]
+            }
+        },
+        {
+            id: "chase-coleman",
+            name: "Chase Coleman at Tiger Global",
+            items: [
+                "Maintain a simple investment philosophy and adhere to it at all times.",
+                "The best risk management occurs at the individual idea level, assuming that the overall portfolio is well-hedged, not over-leveraged, and reasonably diversified.",
+                "Valuations matter, a lot. Even the worst company in the world is attractive at some price just as the best should be sold at the wrong valuation.",
+                "Maintain a healthy level of organizational paranoia.",
+                "Be aggressive when you find highly asymmetric risk/reward opportunities."
+            ],
+            subitems: {
+                0: ["At Tiger Global, we seek to buy high-quality companies at attractive multiples of future free cash flow run by talented, shareholder-oriented management teams."],
+                1: [
+                    "Counterparty exposure is extremely important.",
+                    "Managing a portfolio with negative net exposure can be risky.",
+                    "Asset-based exposure analysis at the portfolio level can be helpful.",
+                    "Concentration in sectors with significant political, interest rate, or commodity price risk requires careful position sizing.",
+                    "Be patient and resist the temptation to shorten your time horizon. \"When everyone is compressing their time horizon, you should lengthen yours.\" \u2014 John Griffin"
+                ],
+                2: ["We have made mistakes by overstaying our welcome in fundamentally attractive industries where the valuations become less compelling."],
+                3: ["Question your assumptions, understand the risks, and be willing to transition when you 'just don't know.' If you believe you are wrong, do not incrementalize. Move on quickly."],
+                4: ["There is no better feeling in the investment business than being early, being big, and being right."]
+            }
+        },
+        {
+            id: "coatue",
+            name: "Coatue Framework",
+            items: ["Team", "TAM", "Traction", "(+) Trend"]
+        },
+        {
+            id: "daegwon-chae",
+            name: "Daegwon Chae, Partner at Bond",
+            items: [
+                "Is this a vertical that will experience 30%+ CAGR over time?",
+                "Is this a growth stage investment that has the potential to generate venture-scale returns? (e.g. generational business?)",
+                "Is this business highly cash-intensive? If so, do they have high LTV and short payback periods?",
+                "Is this a controversial investment among your team? Consensus is priced in."
+            ]
+        },
+        {
+            id: "david-einhorn",
+            name: "David Einhorn's Checklist",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "What are the economics of the business?",
+                "How do the economics compare to the reported earnings?",
+                "How are the interests of the decision makers aligned with investors?"
+            ]
+        },
+        {
+            id: "don-valentine",
+            name: "Don Valentine's Original Question",
+            items: ["Why should I care about this?"]
+        },
+        {
+            id: "dst-global",
+            name: "DST Global 3 Core Elements",
+            items: ["Team", "TAM", "Traction"]
+        },
+        {
+            id: "future-ventures",
+            name: "Future Ventures Key Questions",
+            items: [
+                "Is this company the first of their kind?",
+                "Are they competing or are they creating a category?"
+            ]
+        },
+        {
+            id: "g-squared",
+            name: "G Squared Land and Expand",
+            items: [
+                "Are customers highly engaged? (Low churn for SaaS or high MAU % for consumer)",
+                "Can the company monetize its users over time? (High net dollar retention or rising ARPU)",
+                "Are the businesses' unit economics positive? (LTV to CAC of about 3x or greater)",
+                "Is there a path to profitability within 3 years of investing?",
+                "Does the company have a strong management team?",
+                "Have they been able to bring on solid investor syndicates and board members?",
+                "Is the business capital efficient?",
+                "Are the gross margins high? Do they have the ability to improve over time?",
+                "Does the business have strong network effects?",
+                "Does the business have recurring revenue?",
+                "Does the business have high switching costs for users?",
+                "Does the business have economies of scale?",
+                "Does the business have a trusted brand / superior product?",
+                "Is the TAM large and growing?",
+                "Does the business have a competitive moat and breaking away as a category leader?",
+                "Are there multiple competitors who are also growing and venture-backed?",
+                "Is there a 2-3x base case return within 3 years with a downside case that still yields a full return of capital?"
+            ]
+        },
+        {
+            id: "in-practise",
+            name: "In Practise Primary Research Checklist (For Interviews)",
+            url: "https://inpractise.com/articles/in-practise-primary-research-checklist",
+            sections: [
+                {
+                    heading: "Pre-interview: Business Analysis",
+                    items: [
+                        "Do I understand how this business fits into the wider value chain? Who has power in the value chain?",
+                        "Have I written down what I believe are the core drivers of intrinsic value for the company?",
+                        "Do I understand what I don't know?",
+                        "What information and metrics are reported?",
+                        "What is missing from the company filings? Have I read competitors' filings?",
+                        "Do I understand the economics of one unit? CLTV? Revenue, fixed and variable costs per unit?",
+                        "Do I understand the bull and bear arguments for the company?"
+                    ]
+                },
+                {
+                    heading: "Pre-interview: Executive Analysis",
+                    items: [
+                        "Do I know exactly how the executive spent their day-to-day at the company?",
+                        "What were their key responsibilities and who did they report to?",
+                        "How does the executive's role align with their previous and current roles?",
+                        "What exactly is the executive's circle of competence?",
+                        "How did they rise through the ranks?",
+                        "What kind of operator is this executive? Shareholder perspective or limited to specific role?",
+                        "What is the executive's worldview?",
+                        "On what terms is the executive with current management? Still a shareholder? Fired?"
+                    ]
+                },
+                {
+                    heading: "Interview: Building Trust",
+                    items: [
+                        "Have I sent the executive questions and required materials in advance?",
+                        "Does the executive understand who I am?",
+                        "How do I build trust and respect with this particular executive?",
+                        "Which questions will the executive be least comfortable addressing and why?",
+                        "How do I sequence questions most effectively?",
+                        "How could I get a sense of the integrity of the executive's opinions?"
+                    ]
+                },
+                {
+                    heading: "Interview: Asking Questions",
+                    items: [
+                        "Why does this question really matter?",
+                        "What assumptions am I making by asking this question?",
+                        "What is the most effective line of questioning? Open-ended, indirect, direct, or 'dumb'?",
+                        "Am I pushing my own agenda with this question?",
+                        "Is there a simpler way to ask the question?",
+                        "How am I structuring the question? Framing? Is it closed? How could it be more open?",
+                        "How can the speaker answer this? What would be an effective follow up?",
+                        "If the executive answers X to Y question, what are the second and third-order effects?"
+                    ]
+                },
+                {
+                    heading: "Post-interview: Synthesis",
+                    items: [
+                        "How do my assumptions of the core drivers align with what the executive thinks matters?",
+                        "What new information or facts did I learn? Does any cross-check with other executives?",
+                        "What opinions did the executive have about the core drivers vs. consensus?",
+                        "How could the biases of the executive influence their view?",
+                        "How should I handicap the opinions after considering their biases?"
+                    ]
+                },
+                {
+                    heading: "Post-interview: Further Research",
+                    items: [
+                        "Do I know what is important and not important?",
+                        "How do I gather insight on what I know is important but still don't know?",
+                        "Am I looking in the right place for insight on the key drivers?",
+                        "What opinions or views do I need to sense-check?",
+                        "Which type of person could provide a different perspective?"
+                    ]
+                }
+            ]
+        },
+        {
+            id: "jared-sleeper",
+            name: "Jared Sleeper's \"Getting Up To Speed\" Process",
+            items: [
+                "Review past notes",
+                "Understand pricing",
+                "Identify top competitors",
+                "Read latest transcript Q&A",
+                "Check Glassdoor",
+                "Check G2Crowd",
+                "Check Google Trends",
+                "Other unique relevant data?",
+                "Review guidance vs. performance",
+                "Check LinkedIn hiring",
+                "Chat with IR",
+                "Make sure all the given data is in a model",
+                "Tune model row by row",
+                "Identify key drivers for revenue modeling",
+                "TAM Analysis",
+                "Write down key questions",
+                "Key people and impressions",
+                "Trading dynamics \u2014 share structure/lock-up, etc.",
+                "What would be unique way to get familiar / deep here?",
+                "Watch a demo and/or demo the product"
+            ]
+        },
+        {
+            id: "joe-coster",
+            name: "Joe Coster's Final Decision Checklist",
+            url: "https://www.valueinvestingworld.com/2019/01/final-decision-checklist.html",
+            items: [
+                "Are you tired?",
+                "Did you make this investment decision while the market was closed?",
+                "Have you done enough work, and are you sure this is within your circle of competence?",
+                "Is the balance sheet conservative to allow the company to endure even the most difficult economic environments?",
+                "Is the management team comprised of the kind of people you want to partner with, and are their interests clearly aligned with your interests?",
+                "Is this a good business?",
+                "Do you have downside protection?",
+                "Do you understand price vs. value?",
+                "Is this business almost certain to be making more money 10 years from now?",
+                "Am I viewing this as a business and not just a stock?",
+                "Am I sizing the position appropriately?",
+                "No FOMO, No Sunk Costs, and No Acting Out of Boredom"
+            ]
+        },
+        {
+            id: "joel-greenblatt",
+            name: "Joel Greenblatt's Checklist",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "What are you paying? (EBIT/EV)",
+                "What are you getting? (i.e. how good a business is it? Normalized EBIT/(NWC + Net Equipment))",
+                "What is normalized EBIT in three years?"
+            ]
+        },
+        {
+            id: "john-rotonti",
+            name: "John Rotonti's Investing Checklist",
+            url: "https://www.fool.com/investing/2020/07/16/do-you-have-an-investing-checklist.aspx",
+            sections: [
+                {
+                    heading: "Strong Balance Sheet",
+                    items: [
+                        "Does the business have net cash or net debt?",
+                        "Are debt and net debt levels increasing or decreasing?",
+                        "How does the company use debt? Strategic or out of necessity?",
+                        "What is the cyclical nature and capital intensity of the industry?",
+                        "Does the company have a lot of operating leverage and financial debt leverage?",
+                        "What is the cost of debt? What are maturities? Can it withstand rising rates?",
+                        "What percentage of debt is fixed-rate vs. variable rate?",
+                        "What amount of debt is corporate vs. bank debt?",
+                        "Size of pension obligations and operating leases?",
+                        "What is the credit rating?",
+                        "Financial health ratios: net debt/FCF, interest coverage, debt/equity, etc.",
+                        "Stress test: How long can cash cover total annual expenses assuming zero revenue?"
+                    ]
+                },
+                {
+                    heading: "Organic Revenue Growth",
+                    items: [
+                        "What is the TAM and is the market growing?",
+                        "What long-term secular themes power the company's growth?",
+                        "Does the business have a relevant, in-demand product or service?",
+                        "Is the business completely customer- and product-obsessed?",
+                        "Does the company create joy for its customers?",
+                        "Is the business investing in innovation, R&D, capex, and talent?",
+                        "Does the business have clear opportunities to reinvest at high returns?",
+                        "What is the company's go-to-market strategy?"
+                    ]
+                },
+                {
+                    heading: "Rising or Stable Margins",
+                    items: [
+                        "What is driving margin changes? Pricing power? Scale? Product mix?",
+                        "Fixed-cost or variable-cost business model?",
+                        "Is the product mission-critical but a small % of customer's costs?",
+                        "Culture of profitable growth or growth at any cost?"
+                    ]
+                },
+                {
+                    heading: "High Returns on Invested Capital",
+                    items: [
+                        "Does the company have a unique, hard-to-replicate business model?",
+                        "Are barriers to entry and success high?",
+                        "Is the company a market share leader with growing share?",
+                        "Does the business have the best product and customer service?",
+                        "Is the business fundamental to our way of life?",
+                        "Does the business have defensible competitive advantages?",
+                        "What are the sources of competitive advantages?",
+                        "Is the company investing to protect and build new moats?",
+                        "Did I perform a DuPont Analysis?",
+                        "Is management compensation based on ROIC or FCF?"
+                    ]
+                },
+                {
+                    heading: "Exceptional CEO and Leadership",
+                    items: [
+                        "Is the CEO also the founder or co-founder?",
+                        "Does the CEO have high inside ownership?",
+                        "Is the CEO focused on long-term profitable growth?",
+                        "Is the CEO someone I'd want to work for?",
+                        "Is the CEO compassionate, capable, candid, and committed?",
+                        "Does the CEO have a soul in the game?",
+                        "Has the CEO created a healthy and enduring corporate culture?",
+                        "Has the CEO created an ESG-centric culture?",
+                        "Does the CEO have a strong No. 2?"
+                    ]
+                },
+                {
+                    heading: "Recurring Revenue and Pricing Power",
+                    items: [
+                        "What is the source of recurring revenue? Long-term contracts? Subscriptions? Consumables?",
+                        "How often does the company increase prices and by how much?",
+                        "How enduring are pricing power and recurring revenue?"
+                    ]
+                },
+                {
+                    heading: "Medium or Lower Risk Profile",
+                    items: [
+                        "Too much debt?",
+                        "Mismanagement or poor leadership?",
+                        "Deteriorating vital signs?",
+                        "Commodity exposure?",
+                        "Cyclical and capital intensive or short product lifecycles?",
+                        "Business-model risk?",
+                        "Low barriers to entry?",
+                        "Industry headwinds?",
+                        "Potential for disruption or obsolescence?",
+                        "Customer or supplier concentration?",
+                        "Overly reliant on global supply chains?",
+                        "Poor earnings quality with red flags?",
+                        "Toxic or unhealthy corporate culture?",
+                        "Lack of data privacy, transparency, or succession planning?"
+                    ]
+                },
+                {
+                    heading: "Strong Business Momentum",
+                    items: [
+                        "High organic revenue growth or accelerating?",
+                        "Taking market share?",
+                        "Winning new contracts?",
+                        "Able to increase prices while maintaining demand?",
+                        "Winning recognition for best product/service or best workplace?",
+                        "Recruiting and retaining top talent?",
+                        "Rising margins and ROIC?",
+                        "Successful acquisition integration?"
+                    ]
+                },
+                {
+                    heading: "Mission Beyond Profits",
+                    items: [
+                        "What is the company's mission? Is it solving an important problem?",
+                        "Do business decisions and actions align with the mission?",
+                        "Does the company take a stakeholder-first approach?",
+                        "Does the company create equal or more value for stakeholders as for itself?"
+                    ]
+                },
+                {
+                    heading: "Multi-Bagger Potential",
+                    items: [
+                        "Is the business committed to innovation and adaptability?",
+                        "Does the product fundamentally change how we work or live?",
+                        "Does the business reflect what the world will look like in the future?",
+                        "Does the product save the customer time or money?",
+                        "Does the business have embedded optionality?"
+                    ]
+                }
+            ]
+        },
+        {
+            id: "jonathan-tepper",
+            name: "Jonathan Tepper's Checklist",
+            url: "https://twitter.com/jtepper2/status/1227886802847047680",
+            items: [
+                "Is the business simple and understandable?",
+                "Does the business have a consistent operating history?",
+                "Does the business have favorable long-term prospects?",
+                "Is the business simple, predictable, free-cash-flow generative, resilient and sustainable?",
+                "Does the business have strong profit-growth opportunities and/or scarcity value?",
+                "Does the business have a moat around it? Will the industry be around in 5-10 years?",
+                "Is it a high-quality business that can't blow up and should grow in value?",
+                "Is there a high profit margin (operational margin of safety)?",
+                "Characteristics of a great business: Scarce, clear growth runway, limited competition, not capital/labor intensive, minimal government involvement, great manager",
+                "Who is the CEO and board? Good track record? Candid with shareholders?",
+                "Is management rational with capital?",
+                "Has management made dumb acquisitions or issued shares below intrinsic value?",
+                "Do insiders own stock and buy back shares?",
+                "Is the focus on ROE? Has the company created $1 of market value for every $1 retained?",
+                "What is the rate of 'owner earnings'?",
+                "What is the value of the business? Can it be purchased at a significant discount?",
+                "Does the company have a lot of debt?"
+            ]
+        },
+        {
+            id: "lead-edge",
+            name: "Lead Edge Capital 8 Criteria",
+            url: "https://twitter.com/garrytan/status/1085934476377567232",
+            items: [
+                "Are you growing $10M+ in revenue?",
+                "Are you growing revenue at 50% or more a year?",
+                "Do you have 70%+ gross margins?",
+                "Do you have a recurring business?",
+                "What is your retention? Do you have 90%+ gross retention?",
+                "Are you profitable or break even?",
+                "Do you have a diversified customer base?",
+                "How efficient are you with your capital?"
+            ]
+        },
+        {
+            id: "lenny-rachitsky",
+            name: "Lenny Rachitsky's How to Kickstart and Scale a Marketplace Business",
+            url: "https://www.lennysnewsletter.com/p/how-to-kickstart-and-scale-a-marketplace",
+            sections: [
+                {
+                    heading: "Phase 1: Crack the chicken-and-egg problem",
+                    items: [
+                        "Part 1: Constrain the marketplace",
+                        "Part 2: Decide which side of the marketplace to concentrate on",
+                        "Part 3: Drive initial supply",
+                        "Part 4: Drive initial demand"
+                    ]
+                },
+                {
+                    heading: "Phase 2: Scale your marketplace",
+                    items: [
+                        "Part 1: Determine if you are supply or demand constrained",
+                        "Part 2: Scale growth levers",
+                        "Part 3: Maintain quality",
+                        "Part 4: What would you have done differently if you did it again"
+                    ]
+                },
+                {
+                    heading: "Phase 3: Evolve your marketplace",
+                    items: [
+                        "Part 1: Move to a managed marketplace",
+                        "Part 2: Add new business lines"
+                    ]
+                }
+            ]
+        },
+        {
+            id: "lou-simpson",
+            name: "Lou Simpson's Checklist",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "Does management have a substantial stake in the stock of the company?",
+                "Is management straightforward in dealings with the owners?",
+                "Is management willing to divest unprofitable operations?",
+                "Does management use excess cash to repurchase shares?"
+            ]
+        },
+        {
+            id: "margin-of-safety",
+            name: "Margin of Safety",
+            url: "https://banksiafinance.wordpress.com/",
+            items: [
+                "How can the company be killed?",
+                "What are the biggest threats and weaknesses?",
+                "Does the company have a \"moat\" protecting its business?"
+            ]
+        },
+        {
+            id: "mark-vukich",
+            name: "Mark Vukich's Prompting Questions Framework",
+            url: "https://twitter.com/markvukich",
+            sections: [
+                {
+                    heading: "General Business",
+                    items: [
+                        "Is this a good business?",
+                        "What are the key success factors to superior performance in this industry?",
+                        "Define the market opportunity.",
+                        "How do competitive products address this opportunity?",
+                        "What are the barriers to entry (\"moats\")?",
+                        "Who controls industry pricing?",
+                        "Does the company/sector have any pricing power?",
+                        "How can a good company differentiate itself from a bad one?",
+                        "Do you understand this business? Describe it to a ten year old."
+                    ]
+                },
+                {
+                    heading: "Evaluating Management",
+                    items: [
+                        "Is the company's leadership honest? Do they demonstrate integrity?",
+                        "Is there a lot of employee turnover? How are employees treated?",
+                        "What are the employee's incentives?",
+                        "Is executive leadership incentivized for the long-term?",
+                        "What is their background? Have they been successful in the past?",
+                        "How are they compensated? Interests aligned with shareholders?",
+                        "Have they been good at allocating capital?",
+                        "Are they buying or selling stock?"
+                    ]
+                },
+                {
+                    heading: "Business Model",
+                    items: [
+                        "What is the selling model: razor/blades? services? one-off contracts?",
+                        "What are the economics of the base business unit vs. competitors?",
+                        "Why is the company good (or bad) at what they do? Can they sustain it?",
+                        "Is this company growing by acquisition? How sustainable?",
+                        "Describe the entire sales process \u2013 from order to fulfillment."
+                    ]
+                },
+                {
+                    heading: "Company Culture",
+                    items: [
+                        "Is this a great company? Is it built to last?",
+                        "Can you imagine holding stock for twenty years?",
+                        "With unlimited capital, how would you feel about competing against this company?",
+                        "Compare to a weak competitor. What is the difference and why?"
+                    ]
+                },
+                {
+                    heading: "Financial",
+                    items: [
+                        "What are the capital requirements and cash flow characteristics?",
+                        "How visible are earnings quarter-to-quarter, and year-to-year?",
+                        "Is this a fixed or variable cost business? How much cost leverage?",
+                        "Do earnings grow from unit sales growth, price increases, or margin improvement?"
+                    ]
+                },
+                {
+                    heading: "Valuation",
+                    items: [
+                        "Enterprise Value/EBITDA",
+                        "Growth rates in earnings, EBITDA, and FCF?",
+                        "What has to go right, and where is the most chance for surprise?",
+                        "Relevant precedent transactions?"
+                    ]
+                },
+                {
+                    heading: "Risks",
+                    items: [
+                        "What are the big unknowns? How much can the company control/influence?",
+                        "What could cause this investment to be a total disaster?",
+                        "What good and bad news will affect the company in the coming year?"
+                    ]
+                }
+            ]
+        },
+        {
+            id: "michael-shearn",
+            name: "Michael Shearn's \"Investment Checklist\"",
+            url: "https://twitter.com/BrianFeroldi/status/1279222069402746880",
+            sections: [
+                {
+                    heading: "Basics",
+                    items: [
+                        "Do I want to learn more about this business?",
+                        "How would you evaluate this biz if you became CEO?",
+                        "Describe how the business operates",
+                        "How does the business make money?",
+                        "How has it changed over time?",
+                        "What countries does it operate in?"
+                    ]
+                },
+                {
+                    heading: "Customer",
+                    items: [
+                        "Who is the core customer?",
+                        "Customer concentration?",
+                        "An easy or hard sell?",
+                        "Customer retention rate?",
+                        "Is biz customer-oriented?",
+                        "What pain is alleviated for the customer?",
+                        "Is customer dependent on business?",
+                        "If biz disappeared, would customers care?"
+                    ]
+                },
+                {
+                    heading: "Business",
+                    items: [
+                        "Sustainable competitive advantage? Source?",
+                        "Pricing power?",
+                        "Good or bad industry?",
+                        "How has the industry evolved?",
+                        "Competitive landscape?",
+                        "How intense is the competition?",
+                        "Good supplier relationship?"
+                    ]
+                },
+                {
+                    heading: "Financials",
+                    items: [
+                        "What are the biz fundamentals?",
+                        "What metrics matter most?",
+                        "What are the key risks?",
+                        "How does inflation affect the business?",
+                        "Is the balance sheet strong or weak?",
+                        "What is the ROIC?"
+                    ]
+                },
+                {
+                    heading: "Cash Flow",
+                    items: [
+                        "Accounting standards conservative or liberal?",
+                        "Is revenue recurring?",
+                        "Cyclical, countercyclical, or recession-resistant?",
+                        "Operating leverage?",
+                        "Working capital affect cash flow?",
+                        "High or low capital-expenditures?"
+                    ]
+                },
+                {
+                    heading: "Management",
+                    items: [
+                        "What type of manager is CEO? A lion or a hyena?",
+                        "How did CEO rise to lead the business?",
+                        "How are senior managers compensated?",
+                        "Have the managers been buying or selling the stock?",
+                        "CEO considers all stakeholders?",
+                        "CEO improve day-to-day operations?",
+                        "Issue guidance?",
+                        "Centralized or decentralized?",
+                        "CEO value employees? CEO hires well?",
+                        "Cutting unnecessary costs?",
+                        "Disciplined capital-allocation decisions?",
+                        "Buy back stock?",
+                        "CEO love money or love the business?",
+                        "CEO have integrity? Good communicator?",
+                        "CEO independent thinker? Self-promoting?"
+                    ]
+                },
+                {
+                    heading: "Growth Potential",
+                    items: [
+                        "Organic or M&A?",
+                        "What is the motivation to grow?",
+                        "Has historical growth been profitable? Can it continue?",
+                        "Favorable growth prospects?",
+                        "Growing too quickly or at a steady pace?"
+                    ]
+                },
+                {
+                    heading: "M&A",
+                    items: [
+                        "How does management make M&A decisions?",
+                        "Have past acquisitions been successful?"
+                    ]
+                }
+            ]
+        },
+        {
+            id: "patrick-gregory",
+            name: "Patrick Gregory's Investment Checklist",
+            url: null, // professorgregory.com link is dead (404)
+            items: [
+                "Is this idea within my circle of competence?",
+                "What are the 1-3 main things that will drive the business?",
+                "What is the secular growth potential? Consider the size and growth of its end markets.",
+                "What defines the quality of the business (brand awareness, customer loyalty, pricing control, cost advantages)?",
+                "Is there defensiveness in the business model (brand, IP, regulatory, scale, switching costs, network effect)?",
+                "How capable is management? Do they have a commitment to enhancing shareholder value?",
+                "What is management doing to position the company for the future?",
+                "Does the company earn high ROIC?",
+                "What is the company doing to operate more efficiently?",
+                "Does it have a long runway of reinvestment prospects? Does it have a moat?",
+                "Is it a capital intensive business?",
+                "Is the balance sheet structured to allow the company to take advantage of unforeseen opportunities?",
+                "Are there any off-balance sheet liabilities?",
+                "Are there any potentially disruptive technologies?",
+                "Is it trading at a good price? Is there a case for making a 26% IRR (double in 3 years)?",
+                "What are the catalysts for value creation?",
+                "How long do you anticipate holding the stock?",
+                "If you have to get out, what's the likely reason you were wrong?"
+            ]
+        },
+        {
+            id: "phil-fisher",
+            name: "Phil Fisher's 15 Questions",
+            url: "https://twitter.com/DividendGrowth/status/1320393430732664832",
+            items: [
+                "Does the company have products/services with sufficient market potential for sizable sales increase for several years?",
+                "Does management have determination to develop products that will further increase sales when current growth potential is exploited?",
+                "How effective are R&D efforts in relation to its size?",
+                "Does the company have an above average sales organization?",
+                "Does the company have a worthwhile profit margin?",
+                "What is the company doing to maintain or improve profit margins?",
+                "Does the company have outstanding labor and personnel relations?",
+                "Does the company have outstanding executive relations?",
+                "Does the company have depth to its management?",
+                "How good are cost analysis and accounting controls?",
+                "Are there other aspects peculiar to the industry that give important clues about the company?",
+                "Does the company have a short range or long range outlook regarding profits?",
+                "Will growth require sufficient equity financing that cancels existing stockholders' benefit?",
+                "Does management talk freely when things go well but 'clam up' when troubles occur?",
+                "Does the company have management of unquestionable integrity?"
+            ]
+        },
+        {
+            id: "pmarca",
+            name: "Pmarca's Layers of Risk for a High-Tech Startup",
+            url: "https://knowen-production.s3.amazonaws.com/uploads/attachment/file/2771/pmarca-blog-ebook.pdf",
+            sections: [
+                {
+                    heading: "Founder Risk",
+                    items: ["Does the startup have the right founding team? Great technologist + someone who can run the company?"]
+                },
+                {
+                    heading: "Market Risk",
+                    items: ["Is there a market for the product? Will anyone want it? Will they pay for it?"]
+                },
+                {
+                    heading: "Competition Risk",
+                    items: ["Are there too many other startups already doing this? Is this startup sufficiently differentiated?"]
+                },
+                {
+                    heading: "Timing Risk",
+                    items: ["Is it too early? Is it too late?"]
+                },
+                {
+                    heading: "Financing Risk",
+                    items: ["How many additional rounds of financing will be required for the company to become profitable?"]
+                },
+                {
+                    heading: "Marketing Risk",
+                    items: ["Will this startup be able to cut through the noise? Do the economics of customer acquisition work?"]
+                },
+                {
+                    heading: "Distribution Risk",
+                    items: ["Does this startup need certain distribution partners to succeed? Will it be able to get them?"]
+                },
+                {
+                    heading: "Technology Risk",
+                    items: ["Can the product be built? Are there fundamental breakthroughs that need to happen?"]
+                },
+                {
+                    heading: "Product Risk",
+                    items: ["Even assuming the product can in theory be built, can this team build it?"]
+                },
+                {
+                    heading: "Hiring Risk",
+                    items: ["What positions does the startup need to hire for? Will the founding team be able to hire a good one?"]
+                },
+                {
+                    heading: "Location Risk",
+                    items: ["Where is the startup located? Can it hire the right talent in that location?"]
+                }
+            ]
+        },
+        {
+            id: "porters-five-forces",
+            name: "Porter's Five Forces",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "Threat of new entrants",
+                "Threat of substitute products or services",
+                "Bargaining power of customers (buyers)",
+                "Bargaining power of suppliers",
+                "Intensity of competitive rivalry"
+            ]
+        },
+        {
+            id: "porters-economic-franchise",
+            name: "Porter's Economic Franchise",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "Is it needed or desired?",
+                "Thought by its customers to have no clear substitute",
+                "Not subject to price regulation"
+            ]
+        },
+        {
+            id: "richard-chu",
+            name: "Richard Chu's SaaS Investment Checklist",
+            url: "https://twitter.com/richard_chu97/status/1254533832990175232",
+            items: [
+                "Category leader (dominates a niche, see Gartner/Forrester)",
+                "Recurring revenue (high visibility SaaS model)",
+                "Large and growing TAM vs market share (>$2B market cap, potential to 2-3x in 3 years)",
+                "Defensible moat (network effects, branding, IP, partnerships, distribution, switching costs, scale)",
+                "High gross margins (>70%) and organic revenue growth (>40%)",
+                "High DBNER (>120%) and gross retention rate (>90%)",
+                "Progress towards profitability (improving margins and cash flows, sales efficiency)",
+                "Focused, mission-driven company culture, ambitious vision (4/5+ Glassdoor)",
+                "Founder CEO, experienced management, and high insider ownership",
+                "Rapid customer growth with fast sales cycles (bottom-up/land and expand)",
+                "Diversified customer base (strong pricing power, few dependencies)",
+                "Optionality and rapid product development (creating a platform/ecosystem?)",
+                "User satisfaction/mindshare (job postings, reviews, conferences)",
+                "Valuation (sustainable multiple with opportunity for expansion?)",
+                "Geographic/industry familiarity (US-based? Can I easily explain their product?)",
+                "Technical indicators (relative strength, volume, accumulation/distribution, moving averages)"
+            ]
+        },
+        {
+            id: "ryan-reeves-resilience",
+            name: "Ryan Reeve's Business Resilience Checklist",
+            url: "https://twitter.com/investing_city/status/1304492257735856130",
+            sections: [
+                {
+                    heading: "Business Resilience",
+                    items: [
+                        "Low sales and marketing expenses (word of mouth or strong DTC distribution)",
+                        "Vertically integrated control of the value chain",
+                        "Low customer or supplier concentration",
+                        "Do the products and services help customers cut costs?",
+                        "How long does it take for the customer to figure out the value proposition?"
+                    ]
+                },
+                {
+                    heading: "Financial Strength",
+                    items: [
+                        "Lots of cash",
+                        "Free cash flow positive",
+                        "Strong growth (shows there is demand for the product)"
+                    ]
+                },
+                {
+                    heading: "Management",
+                    items: [
+                        "Long term vision",
+                        "Rate of innovation",
+                        "Skin in the game",
+                        "Founder?",
+                        "Degree of customer obsession",
+                        "Mount Rushmore leaders",
+                        "Rarely talk about selling, just problem solving"
+                    ]
+                }
+            ]
+        },
+        {
+            id: "ryan-reeves-investment",
+            name: "Ryan Reeve's Investment Checklist",
+            url: "https://twitter.com/investing_city/status/1184953816833126401",
+            sections: [
+                {
+                    heading: "Disqualifiers",
+                    items: ["Am I interested in learning more about this company?"]
+                },
+                {
+                    heading: "Important",
+                    items: [
+                        "Is it in my circle of competence?",
+                        "Clear thesis (why do I think this company will be a good stock?)"
+                    ]
+                },
+                {
+                    heading: "Moat",
+                    items: [
+                        "Why is the company better than all the other competition?",
+                        "Have you looked at the innovation decision tree?",
+                        "How do you think about future-proofing and optionality?",
+                        "What is the value proposition? How much value are they providing?",
+                        "What is the culture of the company like? (check Glassdoor)"
+                    ]
+                },
+                {
+                    heading: "Management",
+                    items: [
+                        "Insider ownership and other smart investors?",
+                        "Founder led?",
+                        "Culture of innovation? Long term view? Recent new products?"
+                    ]
+                },
+                {
+                    heading: "Financials",
+                    items: [
+                        "Revenue growth, margin expansion, operating cash flow (FCF margins), ROIC",
+                        "Capital structure, too much debt? Diluting a lot?",
+                        "Total addressable market, how well do you know the industry?"
+                    ]
+                },
+                {
+                    heading: "Biases",
+                    items: [
+                        "Do I like this just because I have spent a lot of time researching it?",
+                        "Do I like it just because it is down a lot from a high?",
+                        "Is this the absolute best choice or am I di-worsifying?",
+                        "Am I seeking reasons to like this company rather than letting facts speak?"
+                    ]
+                },
+                {
+                    heading: "Valuation",
+                    items: ["How confident am I in getting a 5 year 20% CAGR?"]
+                },
+                {
+                    heading: "Allocation",
+                    items: ["What is my gut-level conviction and the upside potential?"]
+                },
+                {
+                    heading: "Pre-Mortem",
+                    items: ["If this turns out to be a bad investment, what will be the reason?"]
+                }
+            ]
+        },
+        {
+            id: "sam-altman",
+            name: "Sam Altman's \"How To Invest In Startups\"",
+            url: "https://blog.samaltman.com/how-to-invest-in-startups",
+            items: [
+                "Identify who is great before they are",
+                "Is the person improving at a noticeable rate?",
+                "Would you work for the founder?",
+                "Can you imagine the founder taking over the industry?",
+                "Is the founder fast-moving and certain to be successful?",
+                "Are the founders scrappy and formidable; mission-oriented, obsessed, relentless, and determined; extremely smart; decisive, fast-moving, and willful; courageous, high-conviction, and willing to be misunderstood; strong communicators and infectious evangelists; and capable of becoming tough and ambitious?",
+                "Can costs be low and cycles fast?",
+                "Are network effects involved?",
+                "Does the industry have a rapid rate of change?",
+                "What can be the growth rate and eventual size of the market?",
+                "Is this a real trend? Do the few users use the platform a lot and love it?",
+                "Is it riding the wave of a new, important and rapidly growing platform?",
+                "Is the product so good people tell spontaneously their friends about it?",
+                "Is the product fundamentally new or 10x better?",
+                "Does the mission attract talented people around the startup?",
+                "Are you being seduced by a good idea pushed by bad founders?",
+                "Are you chasing this investment because other investors like it?"
+            ]
+        },
+        {
+            id: "seilern",
+            name: "Seilern's 10 Golden Indicators",
+            url: "https://www.seilernfunds.com/",
+            items: [
+                "Scalable Business",
+                "Superior Industry Growth",
+                "Consistent Industry Leadership",
+                "Sustainable Competitive Advantage",
+                "Strong Organic Growth",
+                "Wide Geographic & Customer Diversification",
+                "Asset Light & Profitable",
+                "Solid Financial Position",
+                "Transparent Accounts",
+                "Excellent Management & Corporate Governance"
+            ]
+        },
+        {
+            id: "sequoia",
+            name: "Sequoia's Original Checklist",
+            url: "https://www.acquired.fm/episodes/sequoia-capital-part-1",
+            items: [
+                "Must be in a very large market",
+                "Must be in NorCal",
+                "Must be an advanced technology",
+                "Must have high gross margin ability",
+                "Must have the potential for Sequoia to make $100M on the single investment",
+                "Must be positively responsive to our active participation"
+            ]
+        },
+        {
+            id: "tom-murphy",
+            name: "Tom Murphy's Checklist",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "Scarcity value",
+                "Clear and long runway of growth",
+                "Limited competition",
+                "Not capital or labor intensive",
+                "Minimal government involvement",
+                "A major plus to have a great manager"
+            ]
+        },
+        {
+            id: "warren-buffett",
+            name: "Warren Buffett's Checklist",
+            url: "https://twitter.com/jtepper2/status/1167401533547384833",
+            items: [
+                "Is the business simple and understandable?",
+                "Does the business have a consistent operating history?",
+                "Does the business have favorable long-term prospects?",
+                "Is management rational with its capital?",
+                "Is management candid with the shareholders?",
+                "Does management resist the \"institutional imperative\" (groupthink)?",
+                "Is the focus return on equity?",
+                "What is the rate on \"owner earnings\"?",
+                "Is there a high profit margin?",
+                "Has the company created $1 of market value for every $1 retained?",
+                "Financial analysis: Focus on ROE, FCF, high profit margins, and how good will the company be in 10 years vs. competition.",
+                "What is the value of the business?",
+                "Can the company be purchased at a significant discount to its value?"
+            ]
+        },
+        {
+            id: "relative-value",
+            name: "Where Could This Investment Go Wrong?",
+            items: [
+                "Is the product 10x cheaper or better than what exists?",
+                "Is this an aspirin? Or a vitamin?",
+                "What business metrics do they track on their dashboard?",
+                "How did you come up with those metrics?",
+                "Why are they more important than others?"
+            ]
+        }
+    ],
+    otherCollections: [
+        {
+            name: "Investment Principles & Checklists eBook",
+            url: "https://drive.google.com/file/d/0Bzm9JT6Xfru3NE1SZ3gyVHctakE/view",
+            sourceUrl: "https://twitter.com/Vivek_Investor/status/1323969293743058945"
+        }
+    ]
+};
+
+// Render
+function render() {
+    const main = document.getElementById('content');
+    const nav = document.getElementById('sidebar');
+
+    let html = '';
+
+    // Inspiration
+    html += '<div class="inspiration"><h3 style="margin-bottom:12px;color:var(--text-muted);font-size:13px;text-transform:uppercase;letter-spacing:1px;">Inspiration</h3>';
+    DATA.inspiration.forEach(q => {
+        html += `<blockquote>${q.quote}<br><span class="attribution">\u2014 ${q.author}</span></blockquote>`;
+    });
+    html += '</div>';
+
+    // Frameworks
+    let navHtml = '';
+    DATA.frameworks.forEach(fw => {
+        navHtml += `<a href="#${fw.id}" data-id="${fw.id}">${fw.name}</a>`;
+        html += renderFramework(fw);
+    });
+
+    // Other Collections
+    html += '<div class="other-collections"><h2>Other Collections</h2>';
+    DATA.otherCollections.forEach(c => {
+        html += `<p><a href="${c.url}" target="_blank" rel="noopener">${c.name}</a>`;
+        if (c.sourceUrl) html += ` (<a href="${c.sourceUrl}" target="_blank" rel="noopener">Source</a>)`;
+        html += '</p>';
+    });
+    html += '</div>';
+
+    main.innerHTML = html;
+    nav.innerHTML = navHtml;
+}
+
+function renderFramework(fw) {
+    let html = `<div class="framework" id="${fw.id}">`;
+    html += '<div class="framework-header">';
+    html += `<h2>${fw.url ? `<a href="${fw.url}" target="_blank" rel="noopener">${fw.name}</a>` : fw.name}</h2>`;
+    if (fw.sourceUrl) html += ` <span class="source">(<a href="${fw.sourceUrl}" target="_blank" rel="noopener">Source</a>)</span>`;
+    html += '</div>';
+
+    if (fw.items) {
+        html += '<ul class="checklist">';
+        fw.items.forEach((item, i) => {
+            html += `<li>${item}</li>`;
+            if (fw.subitems && fw.subitems[i]) {
+                fw.subitems[i].forEach(sub => {
+                    html += `<li class="sub-item">${sub}</li>`;
+                });
+            }
+        });
+        html += '</ul>';
+    }
+
+    if (fw.sections) {
+        fw.sections.forEach(sec => {
+            html += `<div class="section-heading">${sec.heading}</div>`;
+            if (sec.subsections) {
+                sec.subsections.forEach(sub => {
+                    html += `<div class="subsection-heading">${sub.subheading}</div>`;
+                    html += '<ul class="checklist">';
+                    sub.items.forEach(item => {
+                        html += `<li class="sub-item">${item}</li>`;
+                    });
+                    html += '</ul>';
+                });
+            }
+            if (sec.items) {
+                html += '<ul class="checklist">';
+                sec.items.forEach(item => {
+                    html += `<li>${item}</li>`;
+                });
+                html += '</ul>';
+            }
+        });
+    }
+
+    html += '</div>';
+    return html;
+}
+
+// Search
+function initSearch() {
+    const input = document.getElementById('search');
+    const countEl = document.getElementById('searchCount');
+
+    input.addEventListener('input', () => {
+        const q = input.value.toLowerCase().trim();
+        const frameworks = document.querySelectorAll('.framework');
+        let visible = 0;
+
+        if (!q) {
+            frameworks.forEach(fw => fw.classList.remove('hidden'));
+            countEl.textContent = '';
+            clearHighlights();
+            return;
+        }
+
+        clearHighlights();
+
+        frameworks.forEach(fw => {
+            const text = fw.textContent.toLowerCase();
+            if (text.includes(q)) {
+                fw.classList.remove('hidden');
+                visible++;
+                highlightText(fw, q);
+            } else {
+                fw.classList.add('hidden');
+            }
+        });
+
+        countEl.textContent = `${visible} framework${visible !== 1 ? 's' : ''}`;
+    });
+}
+
+function highlightText(el, query) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(node => {
+        const text = node.textContent;
+        const lower = text.toLowerCase();
+        const idx = lower.indexOf(query);
+        if (idx === -1) return;
+        if (node.parentElement.tagName === 'MARK') return;
+
+        const before = text.substring(0, idx);
+        const match = text.substring(idx, idx + query.length);
+        const after = text.substring(idx + query.length);
+
+        const frag = document.createDocumentFragment();
+        if (before) frag.appendChild(document.createTextNode(before));
+        const mark = document.createElement('mark');
+        mark.textContent = match;
+        frag.appendChild(mark);
+        if (after) frag.appendChild(document.createTextNode(after));
+
+        node.parentNode.replaceChild(frag, node);
+    });
+}
+
+function clearHighlights() {
+    document.querySelectorAll('mark').forEach(mark => {
+        const parent = mark.parentNode;
+        parent.replaceChild(document.createTextNode(mark.textContent), mark);
+        parent.normalize();
+    });
+}
+
+// Active nav on scroll
+function initScrollSpy() {
+    const links = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                links.forEach(l => l.classList.remove('active'));
+                const link = document.querySelector(`nav a[data-id="${entry.target.id}"]`);
+                if (link) link.classList.add('active');
+            }
+        });
+    }, { rootMargin: '-100px 0px -60% 0px' });
+
+    document.querySelectorAll('.framework').forEach(fw => observer.observe(fw));
+}
+
+// Back to top
+function initBackToTop() {
+    const btn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        btn.classList.toggle('visible', window.scrollY > 400);
+    });
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+// Init
+render();
+initSearch();
+initScrollSpy();
+initBackToTop();
+</script>
+</body>
+</html>
