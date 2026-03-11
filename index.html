@@ -44,76 +44,111 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ── Pinned Quote Banner ── */
-        .quote-banner {
-            position: sticky;
-            top: 0; /* updated dynamically by JS */
-            z-index: 150;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease, top 0.3s ease;
-            max-height: 200px;
+        /* ── Why Button ── */
+        .why-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s;
         }
 
-        .quote-banner.collapsed {
-            max-height: 0;
-            padding: 0 24px;
-            border-bottom-color: transparent;
+        .why-btn:hover {
+            color: var(--text);
+            border-color: var(--text-muted);
+            background: var(--surface-raised);
         }
 
-        .quote-inner {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 16px 24px;
+        /* ── Why Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
             display: flex;
-            gap: 24px;
-            align-items: start;
         }
 
-        .quote-inner blockquote {
+        .modal {
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            max-width: 560px;
+            width: calc(100% - 40px);
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 18px;
+            line-height: 1;
+            border-radius: 4px;
+        }
+
+        .modal-close:hover { color: var(--text); background: var(--surface-raised); }
+
+        .modal h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .modal p {
+            font-size: 14.5px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .modal blockquote {
             font-family: 'Newsreader', Georgia, serif;
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 15px;
+            line-height: 1.65;
             color: var(--text-secondary);
             font-style: italic;
-            flex: 1;
+            padding: 16px 20px;
+            background: var(--surface-raised);
+            border-left: 3px solid var(--border);
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 12px;
         }
 
-        .quote-inner blockquote strong {
+        .modal blockquote strong {
             color: var(--text);
             font-weight: 500;
         }
 
-        .quote-inner .attribution {
+        .modal .attribution {
             font-family: 'Inter', sans-serif;
             font-style: normal;
             font-size: 12px;
             font-weight: 500;
             color: var(--text-muted);
             display: block;
-            margin-top: 4px;
-        }
-
-        .quote-toggle {
-            flex-shrink: 0;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 4px;
-            font-size: 16px;
-            line-height: 1;
-            border-radius: 4px;
-        }
-
-        .quote-toggle:hover { color: var(--text-secondary); background: var(--surface-raised); }
-
-        .quote-divider {
-            width: 1px;
-            background: var(--border);
-            align-self: stretch;
-            flex-shrink: 0;
+            margin-top: 8px;
         }
 
         /* ── Header ── */
@@ -514,9 +549,7 @@
             .header-inner { flex-wrap: wrap; gap: 10px; }
             header h1 { font-size: 1rem; width: 100%; }
             .search-container { max-width: 100%; }
-            .quote-inner { flex-direction: column; gap: 12px; padding: 12px 16px; }
-            .quote-divider { width: 100%; height: 1px; }
-            .quote-toggle { align-self: flex-end; }
+            .modal { padding: 24px; }
             .framework-header { flex-direction: column; gap: 4px; }
             .checklist li { font-size: 14px; padding-left: 20px; }
             .checklist .sub-item { padding-left: 36px; font-size: 13px; }
@@ -563,7 +596,7 @@
         }
 
         @media print {
-            nav, header, .back-to-top, .shortcut-help, .quote-banner { display: none !important; }
+            nav, header, .back-to-top, .shortcut-help, .modal-overlay { display: none !important; }
             main { max-width: 100%; padding: 0; }
             .framework { page-break-inside: avoid; margin-bottom: 24px; }
             body { font-size: 12px; }
@@ -593,22 +626,24 @@
                 <span class="kbd-hint"><kbd>/</kbd></span>
             </div>
         </div>
+        <button class="why-btn" id="whyBtn">Why</button>
     </div>
 </header>
 
-<!-- Quote Banner (below header) -->
-<div class="quote-banner" id="quoteBanner">
-    <div class="quote-inner">
+<!-- Why Modal -->
+<div class="modal-overlay" id="whyModal">
+    <div class="modal">
+        <button class="modal-close" id="whyModalClose" aria-label="Close">&#x2715;</button>
+        <h3>Why this exists</h3>
+        <p>Investing well is less about having a single perfect framework and more about developing the discipline to ask the right questions consistently. This collection is a personal tool for staying rigorous &mdash; a way to pressure-test ideas from multiple angles rather than relying on instinct alone. It is not meant to be a rigid system or a substitute for judgment, but a prompt to think more carefully before committing capital.</p>
         <blockquote>
             "<strong>Use a checklist to be sure you get all the main models and use them together in a multimodular way.</strong>"
             <span class="attribution">Charlie Munger</span>
         </blockquote>
-        <div class="quote-divider"></div>
         <blockquote>
             "<strong>He had at his disposal repertoires of possible actions; checklists of things to think about before he acted.</strong>"
             <span class="attribution">Herbert Simon</span>
         </blockquote>
-        <button class="quote-toggle" id="quoteToggle" title="Hide quotes" aria-label="Toggle quotes">&#x2715;</button>
     </div>
 </div>
 
@@ -634,7 +669,6 @@
         <div class="shortcut-row"><span>Next framework</span><kbd>J</kbd></div>
         <div class="shortcut-row"><span>Previous framework</span><kbd>K</kbd></div>
         <div class="shortcut-row"><span>Back to top</span><kbd>T</kbd></div>
-        <div class="shortcut-row"><span>Toggle quotes</span><kbd>Q</kbd></div>
         <div class="shortcut-row"><span>Show shortcuts</span><kbd>?</kbd></div>
     </div>
 </div>
@@ -1704,36 +1738,19 @@ function initBackToTop() {
 }
 
 // ── Quote Banner ──
-function initQuoteBanner() {
-    const banner = document.getElementById('quoteBanner');
-    const toggle = document.getElementById('quoteToggle');
-    const header = document.getElementById('stickyHeader');
+function initWhyModal() {
+    const btn = document.getElementById('whyBtn');
+    const overlay = document.getElementById('whyModal');
+    const close = document.getElementById('whyModalClose');
 
-    function updateHeaderTop() {
-        if (banner.classList.contains('collapsed')) {
-            header.style.top = '0px';
-        } else {
-            header.style.top = banner.offsetHeight + 'px';
-        }
-    }
+    function openModal() { overlay.classList.add('open'); }
+    function closeModal() { overlay.classList.remove('open'); }
 
-    toggle.addEventListener('click', () => {
-        banner.classList.toggle('collapsed');
-        toggle.innerHTML = banner.classList.contains('collapsed') ? '&#x2193;' : '&#x2715;';
-        toggle.title = banner.classList.contains('collapsed') ? 'Show quotes (Q)' : 'Hide quotes (Q)';
-        setTimeout(updateHeaderTop, 310);
+    btn.addEventListener('click', openModal);
+    close.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
     });
-
-    // Initial positioning
-    requestAnimationFrame(() => {
-        updateHeaderTop();
-        // Recalc after fonts load
-        if (document.fonts) {
-            document.fonts.ready.then(updateHeaderTop);
-        }
-    });
-
-    window.addEventListener('resize', updateHeaderTop);
 }
 
 // ── Keyboard Shortcuts ──
@@ -1741,8 +1758,7 @@ function initKeyboard() {
     const input = document.getElementById('search');
     const panel = document.getElementById('shortcutPanel');
     const trigger = document.getElementById('shortcutTrigger');
-    const banner = document.getElementById('quoteBanner');
-    const toggle = document.getElementById('quoteToggle');
+    const modal = document.getElementById('whyModal');
 
     trigger.addEventListener('click', () => {
         panel.classList.toggle('open');
@@ -1759,6 +1775,10 @@ function initKeyboard() {
 
         // Escape always works
         if (e.key === 'Escape') {
+            if (modal.classList.contains('open')) {
+                modal.classList.remove('open');
+                return;
+            }
             if (document.activeElement === input) {
                 if (input.value) {
                     input.value = '';
@@ -1793,11 +1813,6 @@ function initKeyboard() {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 break;
-            case 'q':
-            case 'Q':
-                e.preventDefault();
-                toggle.click();
-                break;
             case '?':
                 e.preventDefault();
                 panel.classList.toggle('open');
@@ -1812,10 +1827,9 @@ function navigateFramework(direction) {
     const frameworks = Array.from(document.querySelectorAll('.framework:not(.hidden)'));
     if (!frameworks.length) return;
 
-    // Calculate the sticky offset (quote banner + header)
-    const banner = document.getElementById('quoteBanner');
+    // Calculate the sticky offset (header only)
     const header = document.getElementById('stickyHeader');
-    const stickyOffset = (banner.classList.contains('collapsed') ? 0 : banner.offsetHeight) + header.offsetHeight + 20;
+    const stickyOffset = header.offsetHeight + 20;
 
     // Find which framework is currently in view
     const scrollTop = window.scrollY + stickyOffset;
@@ -1856,32 +1870,22 @@ function navigateFramework(direction) {
 
 // ── Sticky header positioning ──
 function initStickyPositioning() {
-    const banner = document.getElementById('quoteBanner');
     const header = document.getElementById('stickyHeader');
     const nav = document.getElementById('sidebar');
 
     function update() {
         const headerH = header.offsetHeight;
-        // Quote banner sticks right below the header
-        banner.style.top = headerH + 'px';
-        const bannerH = banner.classList.contains('collapsed') ? 0 : banner.offsetHeight;
-        const totalTop = headerH + bannerH;
-        nav.style.top = totalTop + 'px';
-        nav.style.height = `calc(100vh - ${totalTop}px)`;
+        nav.style.top = headerH + 'px';
+        nav.style.height = `calc(100vh - ${headerH}px)`;
         document.querySelectorAll('.framework').forEach(fw => {
-            fw.style.scrollMarginTop = (totalTop + 16) + 'px';
+            fw.style.scrollMarginTop = (headerH + 16) + 'px';
         });
     }
 
     const observer = new ResizeObserver(update);
-    observer.observe(banner);
     observer.observe(header);
     requestAnimationFrame(update);
     window.addEventListener('resize', update);
-
-    // Watch for collapse changes
-    const mutObserver = new MutationObserver(update);
-    mutObserver.observe(banner, { attributes: true, attributeFilter: ['class'] });
 }
 
 // ── Init ──
@@ -1889,7 +1893,7 @@ render();
 initSearch();
 initScrollSpy();
 initBackToTop();
-initQuoteBanner();
+initWhyModal();
 initKeyboard();
 initStickyPositioning();
 </script>
