@@ -1807,24 +1807,52 @@ function initKeyboard() {
     });
 }
 
+let navIndex = -1;
+
 function navigateFramework(direction) {
     const frameworks = Array.from(document.querySelectorAll('.framework:not(.hidden)'));
     if (!frameworks.length) return;
 
-    const scrollY = window.scrollY + 100;
-    let currentIdx = -1;
+    // Calculate the sticky offset (quote banner + header)
+    const banner = document.getElementById('quoteBanner');
+    const header = document.getElementById('stickyHeader');
+    const stickyOffset = (banner.classList.contains('collapsed') ? 0 : banner.offsetHeight) + header.offsetHeight + 20;
 
+    // Find which framework is currently in view
+    const scrollTop = window.scrollY + stickyOffset;
+    let visibleIdx = -1;
     for (let i = 0; i < frameworks.length; i++) {
-        if (frameworks[i].offsetTop <= scrollY) {
-            currentIdx = i;
+        if (frameworks[i].offsetTop <= scrollTop + 2) {
+            visibleIdx = i;
         }
     }
 
-    let nextIdx = currentIdx + direction;
-    if (nextIdx < 0) nextIdx = 0;
-    if (nextIdx >= frameworks.length) nextIdx = frameworks.length - 1;
+    // If navIndex is out of sync with scroll position, reset it
+    if (Math.abs(navIndex - visibleIdx) > 1) {
+        navIndex = visibleIdx;
+    }
 
-    frameworks[nextIdx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Calculate next index
+    let nextIdx;
+    if (direction === 1) {
+        // Going forward: if we're already at/past the current navIndex target, advance
+        nextIdx = (navIndex < visibleIdx) ? visibleIdx + 1 : navIndex + 1;
+    } else {
+        // Going backward: go to the one before what's visible
+        nextIdx = visibleIdx - 1;
+        // If we're exactly at the top of a framework, go to the one before it
+        if (visibleIdx >= 0 && Math.abs(frameworks[visibleIdx].offsetTop - scrollTop) < 5) {
+            nextIdx = visibleIdx - 1;
+        }
+    }
+
+    // Clamp
+    nextIdx = Math.max(0, Math.min(nextIdx, frameworks.length - 1));
+    navIndex = nextIdx;
+
+    // Scroll using manual offset calculation for reliability
+    const targetTop = frameworks[nextIdx].offsetTop - stickyOffset + 4;
+    window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
 }
 
 // ── Sticky header positioning ──
